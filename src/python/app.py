@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 
 
 app = Flask(__name__)
@@ -7,28 +7,28 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/categories')
 def catalog():
-    return "Home page"
+    return render_template("index.html")
 
 
 @app.route('/<category>/items')
 def category_items(category):
-    return "specific category items"
+    return render_template("category_items.html")
 
 
 @app.route('/<category>/<item>')
 def category_item(category, item):
-    return "item description"
+    return render_template("item_description.html")
 
 
 @app.route('/login')
 def login():
-    return "login page"
+    return render_template("login.html")
 
 
 @app.route('/<category>/<item>/edit', methods=['GET', 'PUT'])
 def edit_item(category, item):
     if request.method == 'GET':
-        return "page to edit items"
+        return render_template("edit_item.html")
     elif request.method == 'PUT':
         return "editted the item"
 
@@ -36,7 +36,7 @@ def edit_item(category, item):
 @app.route('/<category>/<item>/delete', methods=['GET', 'DELETE'])
 def delete_item(category, item):
     if request.method == 'GET':
-        return "page to delete an item"
+        return render_template("delete_item.html")
     elif request.method == 'DELETE':
         return "deleted item"
 

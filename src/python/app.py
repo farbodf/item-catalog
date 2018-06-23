@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 
 
 app = Flask(__name__)
@@ -6,17 +6,17 @@ app = Flask(__name__)
 
 @app.route('/')
 @app.route('/categories')
-def categories():
+def catalog():
     return "Home page"
 
 
-@app.route('/catalog/<category_id>/items')
-def category_items(category_id):
+@app.route('/<category>/items')
+def category_items(category):
     return "specific category items"
 
 
-@app.route('/catalog/<category_id>/<item_id>')
-def category_item(category_id, item_id):
+@app.route('/<category>/<item>')
+def category_item(category, item):
     return "item description"
 
 
@@ -25,14 +25,20 @@ def login():
     return "login page"
 
 
-@app.route('/catalog/<item_id>/edit')
-def edit_item(item_id):
-    return "page to edit items"
+@app.route('/<category>/<item>/edit', methods=['GET', 'PUT'])
+def edit_item(category, item):
+    if request.method == 'GET':
+        return "page to edit items"
+    elif request.method == 'PUT':
+        return "editted the item"
 
 
-@app.route('/catalog/<item_id>/delete')
-def delete_item(item_id):
-    return "page to delete an item"
+@app.route('/<category>/<item>/delete', methods=['GET', 'DELETE'])
+def delete_item(category, item):
+    if request.method == 'GET':
+        return "page to delete an item"
+    elif request.method == 'DELETE':
+        return "deleted item"
 
 
 @app.route('/catalog')

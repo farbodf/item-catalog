@@ -4,7 +4,7 @@ import logging
 from flask import Flask, request, render_template
 from flask import session as login_session
 from config import Config
-from google_login import connect, disconnect
+from item_catalog.google_login import connect, disconnect
 
 
 logging.basicConfig(level=logging.INFO)
@@ -23,6 +23,11 @@ def catalog():
 @app.route('/<category>/items')
 def category_items(category):
     return render_template("category_items.html")
+
+
+@app.route('/new_item', methods=['GET', 'POST'])
+def add_item():
+    return render_template("new_item.html")
 
 
 @app.route('/<category>/<item>')

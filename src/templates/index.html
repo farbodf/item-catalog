@@ -4,7 +4,7 @@
     <title>Item Catalog</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href= "{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
     <!-- functions -->
@@ -42,14 +42,17 @@
                 <header>
                     <h2>Item Catalog enables you to
                     <br />
-                    organize your items into categories!</h2>
+                    organize your items into categories!
+                    <br />
+                    I mean like wow! Mind and body blown away!
+                    </h2>
                 </header>
             </section>
     </div>
     <div class="wrapper">
         <div class="container">
             <div class="row">
-                <section class="col-6 col-12-narrower feature">
+                <section class="col-3 col-12-narrower feature">
                     <header>
                         <h2>Categories</h2>
                     </header>
@@ -57,7 +60,7 @@
                         {{ render_categories(categories) }}
                     </ul>
                 </section>
-                <section class="col-6 col-12-narrower feature">
+                <section class="col-9 col-12-narrower feature">
                     <header>
                         <h2>Latest Items</h2>
                     </header>

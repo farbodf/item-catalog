@@ -1,10 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Item Catalog<</title>
+    <title>Item Catalog</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href= "{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
-    <h1>item description</h1>
+    <!-- functions -->
+    {% macro render_categories(categories) %}
+        {% for category in categories %}
+            <li>
+                <a href="{{ url_for('category_items', category_id=category.id) }}">
+                    {{ category.name }}
+                </a>
+            </li>
+        {% endfor %}
+    {% endmacro %}
+
+    {% macro render_items(items) %}
+        {% for item in items %}
+            <li>
+                <a href="{{ url_for('category_item', category_id=category.id, item_id=item.id) }}">
+                    {{ item.name }}
+                </a>
+            </li>
+        {% endfor %}
+    {% endmacro %}
+    <!-- Header -->
+    <div id="header-wrapper">
+        <div id="header" class="container">
+            <!-- Nav -->
+                <nav id="nav">
+                    <ul>
+                        <li><a href="{{ url_for('catalog') }}">Item Catalog</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                    </ul>
+                </nav>
+        </div>
+            <section id="hero" class="container">
+                <header>
+                    <h2>Item Catalog enables you to
+                    <br />
+                    organize your items into categories!
+                    <br />
+                    I mean like wow! Mind and body blown away!
+                    </h2>
+                </header>
+            </section>
+    </div>
+    <div class="wrapper">
+        <div class="container">
+            <div class="row">
+                <section class="col-12 col-12-narrower feature">
+                    <header>
+                        <h2>{{ item.name }}</h2>
+                    </header>
+                    <p>
+                        {{ item.description }}
+                    </p>
+                </section>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

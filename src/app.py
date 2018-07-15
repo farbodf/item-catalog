@@ -39,8 +39,13 @@ def catalog():
 @app.route('/<category_id>/items')
 def category_items(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
+    categories = session.query(Category).all()
     items = session.query(Item).filter_by(category_id=category.id).all()
-    return render_template("category_items.html", category, items)
+    return render_template("category_items.html",
+                           categories=categories,
+                           category=category,
+                           items=items,
+                           items_num=len(items))
 
 
 @app.route('/new_item', methods=['GET', 'POST'])
@@ -52,7 +57,7 @@ def add_item():
 def category_item(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     item = session.query(Item).filter_by(id=item_id).one()
-    return render_template("item_description.html", category, item)
+    return render_template("item_description.html", item=item)
 
 
 @app.route('/login')

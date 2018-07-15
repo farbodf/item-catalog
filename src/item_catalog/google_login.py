@@ -3,7 +3,7 @@ import httplib2
 import requests
 import logging
 from src.config import Config
-from flask import session, request, make_response, render_template, flash
+from flask import session, request, make_response, flash
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 
 

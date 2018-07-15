@@ -1,15 +1,22 @@
 import random
 import string
 import logging
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify, make_response
 from flask import session as login_session
 from config import Config
 from item_catalog.google_login import connect, disconnect
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from utils.database_setup import Base, Category, Item
 
 
 logging.basicConfig(level=logging.INFO)
 LOGGER = logging.getLogger("item_catalog")
 
+engine = create_engine('sqlite:///items_catalog.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
 
 app = Flask(__name__, template_folder="./templates")
 

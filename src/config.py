@@ -16,4 +16,3 @@ class Config():
     @staticmethod
     def get_cfg():
         return Config.cfg
-

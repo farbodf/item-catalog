@@ -24,12 +24,23 @@ app = Flask(__name__, template_folder="./templates")
 @app.route('/')
 @app.route('/categories')
 def catalog():
-    return render_template("index.html")
+    categories = session.query(Category).all()
+    items = session.query(Item).order_by(Item.id.desc()).all()
+    items_list = [{"name": item.name,
+                   "id": item.id,
+                   "category_id": item.category_id}
+                  for item in items[0:(10 if len(items) > 10 else len(items))]]
+    for item in items_list:
+        category = session.query(Category).filter_by(id=item["category_id"]).one()
+        item['category_name'] = category.name
+    return render_template("index.html", categories=categories, items=items_list)
 
 
-@app.route('/<category>/items')
-def category_items(category):
-    return render_template("category_items.html")
+@app.route('/<category_id>/items')
+def category_items(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Item).filter_by(category_id=category.id).all()
+    return render_template("category_items.html", category, items)
 
 
 @app.route('/new_item', methods=['GET', 'POST'])
@@ -37,9 +48,11 @@ def add_item():
     return render_template("new_item.html")
 
 
-@app.route('/<category>/<item>')
-def category_item(category, item):
-    return render_template("item_description.html")
+@app.route('/<category_id>/<item_id>')
+def category_item(category_id, item_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    item = session.query(Item).filter_by(id=item_id).one()
+    return render_template("item_description.html", category, item)
 
 
 @app.route('/login')
@@ -89,7 +102,17 @@ def delete_item(category, item):
 
 @app.route('/catalog')
 def json_catalog():
-    return "endpoint to return catalog"
+    categories = session.query(Category).all()
+    catalog = []
+    for category in categories:
+        category_dict = {'id': category.id, "name": category.name, "items": []}
+        items = session.query(Item).filter_by(category_id=category.id).all()
+        for item in items:
+            category_dict["items"].append({"id": item.id,
+                                      "name": item.name,
+                                      "description": item.description})
+        catalog.append(category_dict)
+    return jsonify(catalog)
 
 
 if __name__ == "__main__":

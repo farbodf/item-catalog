@@ -1,10 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Item Catalog<</title>
+    <title>Item Catalog</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href= "{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
-    <h1>page to delete item</h1>
+     <!-- functions -->
+    {% macro render_options(categories, category_id) %}
+        {% for category in categories %}
+            {% if category.id == category_id %}
+                <option value="{{category.id}}" selected>{{ category.name }}</option>
+            {% else %}
+                <option value="{{category.id}}">{{ category.name }}</option>
+            {% endif %}
+        {% endfor %}
+    {% endmacro %}
+    <!-- Header -->
+    <div id="header-wrapper">
+        <div id="header" class="container">
+            <!-- Nav -->
+                <nav id="nav">
+                    <ul>
+                        <li><a href="{{ url_for('catalog') }}">Item Catalog</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                    </ul>
+                </nav>
+        </div>
+            <section id="hero" class="container">
+                <header>
+                    <h2>Item Catalog enables you to
+                    <br />
+                    organize your items into categories!
+                    <br />
+                    I mean like wow! Mind and body blown away!
+                    </h2>
+                </header>
+            </section>
+    </div>
+    <div class="wrapper">
+        <div class="container">
+            <div class="row">
+                <section class="col-12 col-12-narrower feature">
+                    <header>
+                        <h2>Delete {{ item.name }}</h2>
+                    </header>
+                    <p>
+                        Are you sure about deleting this item?
+                    </p>
+                    <form method="post">
+                    <input type="submit" value="Delete">
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

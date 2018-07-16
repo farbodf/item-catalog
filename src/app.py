@@ -50,14 +50,18 @@ def category_items(category_id):
 
 @app.route('/new_item', methods=['GET', 'POST'])
 def add_item():
-    return render_template("new_item.html")
+    if request.method == 'GET':
+        categories = session.query(Category).all()
+        return render_template("new_item.html", categories=categories)
+    elif request.method == 'POST':
+        return "Added an item"
 
 
 @app.route('/<category_id>/<item_id>')
 def category_item(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
     item = session.query(Item).filter_by(id=item_id).one()
-    return render_template("item_description.html", item=item)
+    return render_template("item_description.html", item=item, category=category)
 
 
 @app.route('/login')
@@ -89,19 +93,22 @@ def gdisconnect():
     return disconnect()
 
 
-@app.route('/<category>/<item>/edit', methods=['GET', 'PUT'])
-def edit_item(category, item):
+@app.route('/<category_id>/<item_id>/edit', methods=['GET', 'POST'])
+def edit_item(category_id, item_id):
     if request.method == 'GET':
-        return render_template("edit_item.html")
-    elif request.method == 'PUT':
+        categories = session.query(Category).all()
+        item = session.query(Item).filter_by(id=item_id).one()
+        return render_template("edit_item.html", categories=categories, item=item, category_id=category_id)
+    elif request.method == 'POST':
         return "editted the item"
 
 
-@app.route('/<category>/<item>/delete', methods=['GET', 'DELETE'])
-def delete_item(category, item):
+@app.route('/<category_id>/<item_id>/delete', methods=['GET', 'POST'])
+def delete_item(category_id, item_id):
     if request.method == 'GET':
-        return render_template("delete_item.html")
-    elif request.method == 'DELETE':
+        item = session.query(Item).filter_by(id=item_id).one()
+        return render_template("delete_item.html", item=item)
+    elif request.method == 'POST':
         return "deleted item"
 
 

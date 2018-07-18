@@ -1,7 +1,7 @@
 import random
 import string
 import logging
-from flask import Flask, request, render_template, jsonify, make_response
+from flask import Flask, request, render_template, jsonify, redirect, url_for, make_response
 from flask import session as login_session
 from config import Config
 from item_catalog.google_login import connect, disconnect
@@ -55,7 +55,21 @@ def add_item():
         categories = session.query(Category).all()
         return render_template("new_item.html", categories=categories)
     elif request.method == 'POST':
-        return "Added an item"
+        if 'user_id' in login_session:
+            category_id = request.form.getlist('category')[0]
+            category = session.query(Category).filter_by(id=category_id).one()
+            user = session.query(User).filter_by(id=login_session['user_id']).one()
+            new_item = Item(
+                name=request.form.getlist('item_name')[0],
+                description=request.form.getlist('item_description')[0],
+                category=category,
+                user=user
+            )
+            session.add(new_item)
+            session.commit()
+            return redirect(url_for('catalog'))
+        else:
+            return "User was not logged in!"
 
 
 @app.route('/<category_id>/<item_id>')

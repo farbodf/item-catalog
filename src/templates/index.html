@@ -34,7 +34,12 @@
                 <nav id="nav">
                     <ul>
                         <li><a href="{{ url_for('catalog') }}">Item Catalog</a></li>
-                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        {% if session['user_id'] %}
+                            <li><a href="{{ url_for('gdisconnect') }}">Logout</a></li>
+                        {% else %}
+
+                            <li><a href="{{ url_for('login') }}">Login</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
         </div>
@@ -62,7 +67,9 @@
                 </section>
                 <section class="col-9 col-12-narrower feature">
                     <p>
-                        <a href="{{ url_for('add_item') }}">Add item</a>
+                        {% if session['user_id'] %}
+                            <a href="{{ url_for('add_item') }}">Add item</a>
+                        {% endif %}
                     </p>
                     <header>
                         <h2>Latest Items</h2>

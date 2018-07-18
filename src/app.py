@@ -7,7 +7,7 @@ from config import Config
 from item_catalog.google_login import connect, disconnect
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from utils.database_setup import Base, Category, Item
+from utils.database_setup import Base, Category, Item, User
 
 
 logging.basicConfig(level=logging.INFO)
@@ -33,6 +33,7 @@ def catalog():
     for item in items_list:
         category = session.query(Category).filter_by(id=item["category_id"]).one()
         item['category_name'] = category.name
+    LOGGER.info("catalog login info: %s", login_session)
     return render_template("index.html", categories=categories, items=items_list)
 
 
@@ -81,16 +82,40 @@ def login():
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     user_info = connect()
-    return render_template(
-        'logged_in.html',
-        username=user_info['username'],
-        picture=user_info['picture']
-    )
+    if user_info.status_code == 200:
+        user_info = user_info.json
+    else:
+        exit()
+    if 'google_id' in user_info:
+        # If this is a new user add its data to the database
+        result = session.query(User).filter_by(google_id=login_session['google_id']).first()
+        if result:
+            login_session['user_id'] = result.id
+        else:
+            new_user = User(
+                email=login_session['email'],
+                google_id=login_session['google_id'],
+                picture_url=login_session['picture']
+            )
+            session.add(new_user)
+            session.commit()
+            LOGGER.info("new_user object: %s", new_user)
+            login_session['user_id'] = new_user.id
+
+        return render_template(
+            'logged_in.html',
+            picture=user_info['picture'],
+            email=user_info['email']
+        )
+    else:
+        return render_template('index.html')
 
 
 @app.route('/gdisconnect')
 def gdisconnect():
-    return disconnect()
+    response = disconnect()
+    LOGGER.info("Session after disconnect: %s", login_session)
+    return response
 
 
 @app.route('/<category_id>/<item_id>/edit', methods=['GET', 'POST'])
@@ -121,8 +146,8 @@ def json_catalog():
         items = session.query(Item).filter_by(category_id=category.id).all()
         for item in items:
             category_dict["items"].append({"id": item.id,
-                                      "name": item.name,
-                                      "description": item.description})
+                                           "name": item.name,
+                                           "description": item.description})
         catalog.append(category_dict)
     return jsonify(catalog)
 

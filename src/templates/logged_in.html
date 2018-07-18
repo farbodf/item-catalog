@@ -6,8 +6,8 @@
 </head>
 <body>
 
-    <h3>Welcome, {{username}}</h3>
-    <img src="{{picture}}" style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;">
+    <h3>Welcome, {{email}}</h3>
+    <img src="{{picture}}" style = "width: 100px; height: 100px;border-radius: 50px;-webkit-border-radius: 50px;-moz-border-radius: 50px;">
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}

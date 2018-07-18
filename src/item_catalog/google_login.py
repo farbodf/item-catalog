@@ -44,10 +44,13 @@ def connect():
         response = make_response(json.dumps(result.get('error')), 500)
         response.headers['Content-Type'] = 'application/json'
         return response
-
+    LOGGER.info("access token is: %s", access_token)
+    LOGGER.info("id token? : %s", credentials.id_token)
+    LOGGER.info("result is: %s", result)
+    LOGGER.info("client id: %s", client_id)
     # Verify that the access token is used for the intended user.
-    gplus_id = credentials.id_token['sub']
-    if result['user_id'] != gplus_id:
+    google_id = credentials.id_token['sub']
+    if result['user_id'] != google_id:
         response = make_response(
             json.dumps("Token's user ID doesn't match given user ID."), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -62,8 +65,8 @@ def connect():
         return response
 
     stored_access_token = session.get('access_token')
-    stored_gplus_id = session.get('gplus_id')
-    if stored_access_token is not None and gplus_id == stored_gplus_id:
+    stored_google_id = session.get('google_id')
+    if stored_access_token is not None and google_id == stored_google_id:
         response = make_response(json.dumps('Current user is already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
@@ -71,7 +74,7 @@ def connect():
 
     # Store the access token in the session for later use.
     session['access_token'] = credentials.access_token
-    session['gplus_id'] = gplus_id
+    session['google_id'] = google_id
 
     # Get user info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
@@ -80,13 +83,15 @@ def connect():
 
     data = answer.json()
 
-    session['username'] = data['name']
     session['picture'] = data['picture']
     session['email'] = data['email']
     LOGGER.info('data is: %s', data)
-    flash("you are now logged in as {}".format(session['username']))
-    return {"username": session['username'],
-            "picture": session['picture']}
+    flash("you are now logged in as {}".format(session['email']))
+    response = make_response(json.dumps({"google_id": session['google_id'],
+                                         "picture": session['picture'],
+                                         "email": session['email']}), 200)
+    response.headers['Content-Type'] = 'application/json'
+    return response
 
 
 def disconnect():
@@ -98,7 +103,6 @@ def disconnect():
         return response
     LOGGER.info('In gdisconnect access token is %s', access_token)
     LOGGER.info('login session is: %s', session)
-    LOGGER.info('User name is: %s', session['username'])
     url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(
         session['access_token']
     )
@@ -108,8 +112,7 @@ def disconnect():
     LOGGER.info('result is %s', result)
     if result['status'] == '200':
         del session['access_token']
-        del session['gplus_id']
-        del session['username']
+        del session['google_id']
         del session['email']
         del session['picture']
         response = make_response(json.dumps('Successfully disconnected.'), 200)

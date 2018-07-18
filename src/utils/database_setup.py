@@ -19,6 +19,7 @@ class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     email = Column(String(250))
+    google_id = Column(Integer)
     picture_url = Column(String(250))
 
 

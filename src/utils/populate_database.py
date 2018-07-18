@@ -25,7 +25,9 @@ add_and_commit(general_category, session)
 
 # Add a user
 example_user = User(email="user@example.com",
+                    google_id='1',
                     picture_url="https://openclipart.org/image/80px/svg_to_png/247324/abstract-user-flat-1.png")
+
 add_and_commit(example_user, session)
 
 # Add a few polls

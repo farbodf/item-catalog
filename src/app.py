@@ -72,6 +72,36 @@ def add_item():
             return "User was not logged in!"
 
 
+@app.route('/<category_id>/<item_id>/edit', methods=['GET', 'POST'])
+def edit_item(category_id, item_id):
+    if request.method == 'GET':
+        categories = session.query(Category).all()
+        item = session.query(Item).filter_by(id=item_id).one()
+        return render_template("edit_item.html", categories=categories, item=item, category_id=category_id)
+    elif request.method == 'POST':
+        if 'user_id' in login_session:
+            category_id = request.form.getlist('category')[0]
+            category = session.query(Category).filter_by(id=category_id).one()
+            item = session.query(Item).filter_by(id=item_id).one()
+            item.name = request.form.getlist('item_name')[0]
+            item.description = request.form.getlist('item_description')[0]
+            item.category = category
+            session.add(item)
+            session.commit()
+            return redirect(url_for('catalog'))
+        else:
+            return "User was not logged in!"
+
+
+@app.route('/<category_id>/<item_id>/delete', methods=['GET', 'POST'])
+def delete_item(category_id, item_id):
+    if request.method == 'GET':
+        item = session.query(Item).filter_by(id=item_id).one()
+        return render_template("delete_item.html", item=item)
+    elif request.method == 'POST':
+        return "deleted item"
+
+
 @app.route('/<category_id>/<item_id>')
 def category_item(category_id, item_id):
     category = session.query(Category).filter_by(id=category_id).one()
@@ -130,25 +160,6 @@ def gdisconnect():
     response = disconnect()
     LOGGER.info("Session after disconnect: %s", login_session)
     return response
-
-
-@app.route('/<category_id>/<item_id>/edit', methods=['GET', 'POST'])
-def edit_item(category_id, item_id):
-    if request.method == 'GET':
-        categories = session.query(Category).all()
-        item = session.query(Item).filter_by(id=item_id).one()
-        return render_template("edit_item.html", categories=categories, item=item, category_id=category_id)
-    elif request.method == 'POST':
-        return "editted the item"
-
-
-@app.route('/<category_id>/<item_id>/delete', methods=['GET', 'POST'])
-def delete_item(category_id, item_id):
-    if request.method == 'GET':
-        item = session.query(Item).filter_by(id=item_id).one()
-        return render_template("delete_item.html", item=item)
-    elif request.method == 'POST':
-        return "deleted item"
 
 
 @app.route('/catalog')

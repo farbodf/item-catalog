@@ -24,7 +24,11 @@
                 <nav id="nav">
                     <ul>
                         <li><a href="{{ url_for('catalog') }}">Item Catalog</a></li>
-                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        {% if session['user_id'] %}
+                            <li><a href="{{ url_for('gdisconnect') }}">Logout</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('login') }}">Login</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
         </div>

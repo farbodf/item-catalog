@@ -99,7 +99,13 @@ def delete_item(category_id, item_id):
         item = session.query(Item).filter_by(id=item_id).one()
         return render_template("delete_item.html", item=item)
     elif request.method == 'POST':
-        return "deleted item"
+        if 'user_id' in login_session:
+            item = session.query(Item).filter_by(id=item_id).one()
+            session.delete(item)
+            session.commit()
+            return redirect(url_for('catalog'))
+        else:
+            return "User was not logged in!"
 
 
 @app.route('/<category_id>/<item_id>')

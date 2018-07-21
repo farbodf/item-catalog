@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <title>Item Catalog</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href= "{{ url_for('static', filename='css/main.css') }}">
+    {% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="navbar">
+            <!-- Nav -->
+                <nav>
+                    <ul class="navbar_elements">
+                        <li><a href="{{ url_for('catalog') }}">Item Catalog</a></li>
+                        {% if session['user_id'] %}
+                            <li><a href="{{ url_for('gdisconnect') }}">Logout</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('login') }}">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+        </div>
+        <div class="banner">
+            <section>
+                <header>
+                    <h2 id="banner_text">Item Catalog enables you to
+                    <br />
+                    organize your items into categories!
+                    <br />
+                    I mean like wow! Mind and body blown away!
+                    </h2>
+                </header>
+            </section>
+        </div>
+    </div>
+    <div>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>

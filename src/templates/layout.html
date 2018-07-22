@@ -13,16 +13,16 @@
     <div class="header">
         <div class="navbar">
             <!-- Nav -->
-                <nav>
-                    <ul class="navbar_elements">
-                        <li><a href="{{ url_for('catalog') }}">Item Catalog</a></li>
-                        {% if session['user_id'] %}
-                            <li><a href="{{ url_for('gdisconnect') }}">Logout</a></li>
-                        {% else %}
-                            <li><a href="{{ url_for('login') }}">Login</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
+            <nav>
+                <ul class="navbar_elements">
+                    <li class="homepage"><a href="{{ url_for('catalog') }}">Item Catalog</a></li>
+                    {% if session['access_token'] %}
+                        <li class="login"><a href="{{ url_for('gdisconnect') }}">Logout</a></li>
+                    {% else %}
+                        <li class="login"><a href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
         <div class="banner">
             <section>
@@ -38,6 +38,7 @@
         </div>
     </div>
     <div>
+        <span id="flash">{% block flash %}{% endblock %}</span>
         <div id="content">
             {% block content %}{% endblock %}
         </div>

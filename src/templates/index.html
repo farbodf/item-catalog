@@ -21,9 +21,19 @@
     {% endfor %}
 {% endmacro %}
 
+{% block flash %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+           {{message}}<br>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% endblock %}
+
 <!-- content -->
 {% block content %}
-    <section>
+    <section id="categories">
         <header>
             <h2>Categories</h2>
         </header>
@@ -31,9 +41,9 @@
             {{ render_categories(categories) }}
         </ul>
     </section>
-    <section>
+    <section id="items">
         <p>
-            {% if session['user_id'] %}
+            {% if session['access_token'] %}
                 <a href="{{ url_for('add_item') }}">Add item</a>
             {% endif %}
         </p>

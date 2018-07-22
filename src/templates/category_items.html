@@ -21,8 +21,18 @@
     {% endfor %}
 {% endmacro %}
 
+{% block flash %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+           {{message}}<br>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% endblock %}
+
 {% block content %}
-                <section>
+                <section id="categories">
                     <header>
                         <h2>Categories</h2>
                     </header>
@@ -30,7 +40,7 @@
                         {{ render_categories(categories) }}
                     </ul>
                 </section>
-                <section>
+                <section id="items">
                     <header>
                         <h2>{{ category.name }} Items ({{ items_num }} items)</h2>
                     </header>

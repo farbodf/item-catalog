@@ -1,7 +1,7 @@
 import random
 import string
 import logging
-from flask import Flask, request, render_template, jsonify, redirect, url_for, make_response
+from flask import Flask, request, render_template, jsonify, redirect, url_for, flash
 from flask import session as login_session
 from config import Config
 from item_catalog.google_login import connect, disconnect
@@ -90,7 +90,8 @@ def edit_item(category_id, item_id):
             session.commit()
             return redirect(url_for('catalog'))
         else:
-            return "User was not logged in!"
+            flash("User not logged in! Please log in first.")
+            return redirect(url_for('catalog'))
 
 
 @app.route('/<category_id>/<item_id>/delete', methods=['GET', 'POST'])
@@ -105,7 +106,8 @@ def delete_item(category_id, item_id):
             session.commit()
             return redirect(url_for('catalog'))
         else:
-            return "User was not logged in!"
+            flash("User not logged in! Please log in first.")
+            return redirect(url_for('catalog'))
 
 
 @app.route('/<category_id>/<item_id>')
@@ -165,7 +167,11 @@ def gconnect():
 def gdisconnect():
     response = disconnect()
     LOGGER.info("Session after disconnect: %s", login_session)
-    return response
+    if response.status_code == 200:
+        flash("User logged out.")
+        return redirect(url_for('catalog'))
+    else:
+        return response
 
 
 @app.route('/catalog')

@@ -1,0 +1,102 @@
+body {
+    font-family: 'IBM Plex Sans', sans-serif;
+	background-color: #D8D8D6;
+    margin: 0;
+}
+
+.banner {
+    position: relative;
+    height: 300px;
+    background-image: url("../resources/cover.jpg");
+    background-size: cover;
+}
+
+#banner_text {
+    color: #B31F4E;
+    margin: 0;
+    padding: 10px;
+    background-color: rgba(216, 216, 214, 0.85);
+    position: absolute;
+    bottom: 8px;
+    left: 16px;
+    font-size: 18px;
+}
+
+li {
+    list-style: none;
+}
+
+ul {
+    padding: 1px;
+    margin: 0;
+}
+
+.header {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #A39D91;
+    padding: 10px 20px 10px 20px;
+}
+
+#content {
+    padding: 30px;
+}
+
+#categories {
+    float: left;
+    padding-right: 30px;
+}
+
+#items {
+    float: left;
+    padding-left: 20px;
+    padding-bottom: 30px;
+    border-left: #B31F4E solid 5px;
+}
+
+.navbar_elements li {
+    display: inline-block;
+    color: #2B3A42;
+}
+
+.login {
+    float: right;
+}
+
+a:visited {
+    color: #2B3A42;
+}
+
+#flash {
+    float: left;
+    padding-left: 30px;
+}
+
+#signinButton {
+    margin: auto;
+    width: fit-content;
+    padding: 20px;
+}
+
+#signinButton p {
+    text-align: center;
+}
+
+#google_button {
+    text-align: center;
+}
+
+a {
+    color: #2B3A42;
+}
+
+body {
+    color: #2B3A42;
+}
+
+a {
+    text-decoration: none;
+}

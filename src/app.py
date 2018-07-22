@@ -83,11 +83,15 @@ def edit_item(category_id, item_id):
             category_id = request.form.getlist('category')[0]
             category = session.query(Category).filter_by(id=category_id).one()
             item = session.query(Item).filter_by(id=item_id).one()
+            if item.user_id != login_session['user_id']:
+                flash("User is not authorized to edit this item.")
+                return redirect(url_for('catalog'))
             item.name = request.form.getlist('item_name')[0]
             item.description = request.form.getlist('item_description')[0]
             item.category = category
             session.add(item)
             session.commit()
+            flash("Item editted.")
             return redirect(url_for('catalog'))
         else:
             flash("User not logged in! Please log in first.")
@@ -102,8 +106,12 @@ def delete_item(category_id, item_id):
     elif request.method == 'POST':
         if 'user_id' in login_session:
             item = session.query(Item).filter_by(id=item_id).one()
+            if item.user_id != login_session['user_id']:
+                flash("User is not authorized to edit this item.")
+                return redirect(url_for('catalog'))
             session.delete(item)
             session.commit()
+            flash("Item deleted.")
             return redirect(url_for('catalog'))
         else:
             flash("User not logged in! Please log in first.")

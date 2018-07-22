@@ -67,9 +67,11 @@ def add_item():
             )
             session.add(new_item)
             session.commit()
+            flash("Item added.")
             return redirect(url_for('catalog'))
         else:
-            return "User was not logged in!"
+            flash("User not logged in! Please log in first.")
+            return redirect(url_for('catalog'))
 
 
 @app.route('/<category_id>/<item_id>/edit', methods=['GET', 'POST'])

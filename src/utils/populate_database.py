@@ -13,36 +13,44 @@ def add_and_commit(item, session):
     session.commit()
 
 
-# Add a few categories
-technology_category = Category(name="Technology")
-add_and_commit(technology_category, session)
-
-music_category = Category(name="Music Genres")
-add_and_commit(music_category, session)
-
-general_category = Category(name="General")
-add_and_commit(general_category, session)
+categories = ["Technology", "Programming Language", "Entertainment", "Drink"
+              "Politics", "Science", "Movie", "Music", "General"]
 
 # Add a user
 example_user = User(email="user@example.com",
                     google_id='1',
                     picture_url="https://openclipart.org/image/80px/svg_to_png/247324/abstract-user-flat-1.png")
-
 add_and_commit(example_user, session)
 
-# Add a few polls
-music_item = Item(
-    name="Rock",
-    description="Rock music is a broad genre of popular music that originated as 'rock and roll' in the United States in the early 1950s, and developed into a range of different styles in the 1960s and later, particularly in the United Kingdom and in the United States",
-    category=music_category,
-    user=example_user
-)
-add_and_commit(music_item, session)
+items = [{"name": "Statistics", "category": "Science"},
+         {"name": "Calculus", "category": "Science"},
+         {"name": "Physics", "category": "Science"},
+         {"name": "Birdman", "category": "Movie"},
+         {"name": "Inception", "category": "Movie"},
+         {"name": "Microsoft", "category": "Technology"},
+         {"name": "Rap", "category": "Music"},
+         {"name": "Theater", "category": "Entertainment"},
+         {"name": "Senate", "category": "Politics"},
+         {"name": "Whiskey", "category": "Drink"},
+         {"name": "Wine", "category": "Drink"},
+         {"name": "Beer", "category": "Drink"},
+         {"name": "Vodka", "category": "Drink"},
+         {"name": "Rock", "category": "Music"},
+         {"name": "Apple", "category": "Technology"},
+         {"name": "Python", "category": "Programming Language"},
+         {"name": "Scala", "category": "Programming Language"},
+         {"name": "R", "category": "Programming Language"},
+         {"name": "Java", "category": "Programming Language"},
+         {"name": "C", "category": "Programming Language"},
+         {"name": "Rust", "category": "Programming Language"}]
 
-tech_item = Item(
-    name="OS X",
-    description="macOS is a series of graphical operating systems developed and marketed by Apple Inc. since 2001. It is the primary operating system for Apple's Mac family of computers. Within the market of desktop, laptop and home computers, and by web usage, it is the second most widely used desktop OS, after Microsoft Windows.",
-    category=technology_category,
-    user=example_user
-)
-add_and_commit(tech_item, session)
+for category_name in categories:
+    category = Category(name=category_name)
+    add_and_commit(category, session)
+    category_items = [item for item in items if item["category"] == category_name]
+    for item in category_items:
+        item = Item(name=item['name'],
+                    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce luctus eros in fringilla laoreet. In vel urna ac magna placerat dictum a id tortor. Fusce dignissim scelerisque sodales. Proin aliquam diam vel est dapibus, a tempor orci pellentesque. Suspendisse potenti.",
+                    category=category,
+                    user=example_user)
+        add_and_commit(item, session)
